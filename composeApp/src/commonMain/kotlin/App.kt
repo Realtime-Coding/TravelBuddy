@@ -18,6 +18,7 @@ import coil3.memory.MemoryCache
 import coil3.request.CachePolicy
 import coil3.request.crossfade
 import coil3.util.DebugLogger
+import data.database.FavoriteDao
 import okio.FileSystem
 import theme.TravelAppTheme
 import ui.component.BottomMenuBar
@@ -31,10 +32,11 @@ import util.AnimateVisibility
 
 @Composable
 internal fun App(
+    dao: FavoriteDao? = null,
     viewModel: HomeViewModel = viewModel { HomeViewModel() }
 ) {
+    viewModel.setFavoriteDao(dao)
     TravelAppTheme {
-
         setSingletonImageLoaderFactory { context ->
             getAsyncImageLoader(context)
         }

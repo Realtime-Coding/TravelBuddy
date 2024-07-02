@@ -1,13 +1,17 @@
 package ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import data.FakeCategories
 import data.FakeDestinations
 import data.FakeFavorites
+import data.database.FavoriteDao
+import data.database.RoomMapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import model.Category
 import model.Destination
 
@@ -24,6 +28,8 @@ class HomeViewModel : ViewModel() {
     private val _bottomNavBarVisible = MutableStateFlow(true)
     val bottomNavBarVisible: StateFlow<Boolean> = _bottomNavBarVisible.asStateFlow()
 
+    private var dao: FavoriteDao? = null
+
     fun setBottomNavBarVisible(value: Boolean) {
         _bottomNavBarVisible.update { value }
     }
@@ -31,7 +37,10 @@ class HomeViewModel : ViewModel() {
     fun checkFavorite(destination: Destination) = FakeFavorites.favorites.any { it == destination }
 
     fun addFavorite(destination: Destination) {
-        FakeFavorites.favorites.add(destination)
+        //FakeFavorites.favorites.add(destination)
+        viewModelScope.launch {
+            dao?.upsert(RoomMapper.toFavoriteEntity(destination))
+        }
     }
 
     fun removeFavorite(destination: Destination){
@@ -40,5 +49,8 @@ class HomeViewModel : ViewModel() {
         }
     }
 
+    fun setFavoriteDao(dao: FavoriteDao?) {
+         this.dao = dao
+    }
 
 }

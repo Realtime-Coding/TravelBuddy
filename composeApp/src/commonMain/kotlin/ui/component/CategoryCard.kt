@@ -22,6 +22,8 @@ import model.Category
 import org.jetbrains.compose.resources.painterResource
 import theme.CategoryBgColor
 import theme.SecondTextColor
+import travelbuddy.composeapp.generated.resources.Res
+import travelbuddy.composeapp.generated.resources.star
 
 @Composable
 fun categoryItem(category: Category, onItemClicked: (Category) -> Unit) {
@@ -39,7 +41,7 @@ fun categoryItem(category: Category, onItemClicked: (Category) -> Unit) {
         ) {
             Image(
                 modifier = Modifier.width(17.dp).height(20.dp),
-                painter = painterResource(category.image),
+                painter = painterResource(category.image ?: Res.drawable.star),
                 contentDescription = null
             )
             Text(
